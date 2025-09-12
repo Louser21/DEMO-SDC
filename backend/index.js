@@ -2,33 +2,28 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const mongoose = require('mongoose');
+const path = require('path');
 const Review = require('./model/Review');
 const { postReview } = require('./controller/postReview');
 const app = express();
 
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 app.use(cors());
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-
-const MONGODB_URL = process.env.MONGODB_URL;
-
-mongoose.connect(MONGODB_URL)
-    .then(() => {
-        console.log('Connected to MongoDB successfully');
-    })
-    .catch((error) => {
-        console.error('Error connecting to MongoDB:', error.message);
-    });
-
 app.use(express.json());
 
-app.post('/', postReview);
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
-app.get('/overall-average', async (req, res) => {
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+});
+
+const apiRouter = express.Router();
+
+apiRouter.post('/submit', postReview);
+
+apiRouter.get('/overall-average', async (req, res) => {
     try {
         let result = await Review.aggregate([
             { $group: { _id: null, average: { $avg: "$average" } } },
@@ -40,7 +35,7 @@ app.get('/overall-average', async (req, res) => {
     }
 });
 
-app.get('/check-rated', async (req, res) => {
+apiRouter.get('/check-rated', async (req, res) => {
     const user_rating_id = req.query.user_rating_id;
     if (!user_rating_id) {
         return res.status(400).json({ hasRated: false });
@@ -52,6 +47,21 @@ app.get('/check-rated', async (req, res) => {
         res.status(500).json({ hasRated: false });
     }
 });
+
+app.use('/api', apiRouter);
+
+const MONGODB_URL = process.env.MONGODB_URL;
+
+mongoose.connect(MONGODB_URL)
+    .then(() => {
+        console.log('Connected to MongoDB successfully');
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    })
+    .catch((error) => {
+        console.error('Error connecting to MongoDB:', error.message);
+    });
 
 
 

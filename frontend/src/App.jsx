@@ -11,6 +11,10 @@ import "./App.css";
 import Silk from './components/Silk';
 import GradientText from './components/GradientText';
 
+const API_BASE_URL = process.env.NODE_ENV === 'production'
+  ? '/api'
+  : 'http://localhost:4000/api';
+
 function raand(opacity = 0.15) {
   const r = Math.floor(Math.random() * 256);
   const g = Math.floor(Math.random() * 256);
@@ -232,7 +236,7 @@ function App() {
   useEffect(() => {
     const checkAlreadyRated = async () => {
       try {
-        const res = await fetch(`http://localhost:4000/check-rated?user_rating_id=${userId}`);
+        const res = await fetch(`${API_BASE_URL}/check-rated?user_rating_id=${userId}`);
         const data = await res.json();
         if (data.hasRated) {
           setHasRated(true);
@@ -264,7 +268,7 @@ function App() {
       user_rating_id: userId
     };
     try {
-      const res = await fetch("http://localhost:4000/", {
+      const res = await fetch(`${API_BASE_URL}/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
