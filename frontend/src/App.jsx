@@ -196,7 +196,7 @@ function Hero() {
 
 function Loader() {
   return (
-    <div className="bg-gradient-to-br from-black via-purple-950/30 to-black fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
+    <div className="bg-black fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
       <Hyperspeed
         effectOptions={{
           onSpeedUp: () => { },
@@ -382,7 +382,7 @@ function App() {
 
   return (
     <>
-      {/* <Loader /> */}
+      <Loader />
       <Hero />
 
       <div className="bg-black">
