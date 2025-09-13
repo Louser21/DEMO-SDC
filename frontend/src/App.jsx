@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 import { Star } from "lucide-react";
-import AnimatedList from './components/AnimatedList';
-import SpotlightCard from './components/SpotlightCard';
-import LightRays from './components/LightRays';
-import Hyperspeed from './components/Hyperspeed';
-import TextType from './components/TextType';
-import ScrollFloat from './components/ScrollFloat';
+import AnimatedList from "./components/AnimatedList";
+import SpotlightCard from "./components/SpotlightCard";
+import LightRays from "./components/LightRays";
+import Hyperspeed from "./components/Hyperspeed";
+import TextType from "./components/TextType";
+import ScrollFloat from "./components/ScrollFloat";
 import { Button } from "./components/ui/button";
 import "./App.css";
 
@@ -17,16 +17,16 @@ function raand(opacity = 0.15) {
 }
 
 function generateUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = Math.random() * 16 | 0,
-      v = c === 'x' ? r : (r & 0x3 | 0x8);
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c === "x" ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
 
 function setCookie(name, value, days) {
   const d = new Date();
-  d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+  d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
   const expires = "expires=" + d.toUTCString();
   document.cookie = name + "=" + value + ";" + expires + ";path=/";
 }
@@ -34,7 +34,7 @@ function setCookie(name, value, days) {
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
+  if (parts.length === 2) return parts.pop().split(";").shift();
 }
 
 function Que({ q, rating, setRating, hasRated }) {
@@ -51,36 +51,40 @@ function Que({ q, rating, setRating, hasRated }) {
           <div className="flex justify-center gap-3 mb-4">
             {hasRated
               ? [...Array(rating)].map((_, i) => (
-                <Star
-                  key={i}
-                  size={32}
-                  className="text-yellow-400 fill-yellow-400"
-                />
-              ))
-              : [1, 2, 3, 4, 5].map((star) => {
-                const filled = star <= (hover || rating);
-                return (
                   <Star
-                    key={star}
+                    key={i}
                     size={32}
-                    className={
-                      filled
-                        ? "text-yellow-400 fill-yellow-400"
-                        : "text-gray-400"
-                    }
-                    onMouseEnter={() => !hasRated && setHover(star)}
-                    onMouseLeave={() => !hasRated && setHover(0)}
-                    onClick={() => !hasRated && setRating(star)}
+                    className="text-yellow-400 fill-yellow-400"
                   />
-                );
-              })}
+                ))
+              : [1, 2, 3, 4, 5].map((star) => {
+                  const filled = star <= (hover || rating);
+                  return (
+                    <Star
+                      key={star}
+                      size={32}
+                      className={
+                        filled
+                          ? "text-yellow-400 fill-yellow-400"
+                          : "text-gray-400"
+                      }
+                      onMouseEnter={() => !hasRated && setHover(star)}
+                      onMouseLeave={() => !hasRated && setHover(0)}
+                      onClick={() => !hasRated && setRating(star)}
+                    />
+                  );
+                })}
           </div>
 
           {rating > 0 && (
             <div className="text-center">
-              <div className="inline-flex gap-2 px-4 py-2 bg-yellow-500/20 rounded-full border border-yellow-400/30">
-                <span className="text-gray-200">You rated this</span>
-                <span className="text-yellow-400 font-bold">{rating} / 5</span>
+              <div className="inline-flex flex-col gap-2 px-4 py-2 bg-yellow-500/20 rounded-full border border-yellow-400/30 items-center">
+                <span className="text-gray-200 whitespace-nowrap">
+                  You rated this
+                </span>
+                <span className="text-yellow-400 font-bold whitespace-nowrap">
+                  {rating} / 5
+                </span>
               </div>
             </div>
           )}
@@ -105,30 +109,45 @@ function OverallAverage({ value }) {
                 <Star
                   key={i}
                   size={40}
-                  className={`${i < Math.round(value)
-                    ? "text-yellow-400 fill-yellow-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.8)]"
-                    : "text-gray-500"
-                    }`}
+                  className={`${
+                    i < Math.round(value)
+                      ? "text-yellow-400 fill-yellow-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.8)]"
+                      : "text-gray-500"
+                  }`}
                 />
               ))}
             </div>
-            <div className="text-3xl text-white font-class">Overall Average Rating</div>
-            <div className="text-gray-400 text-lg mt-2 font-class">Based on all feedback received</div>
+            <div className="text-3xl text-white font-class">
+              Overall Average Rating
+            </div>
+            <div className="text-gray-400 text-lg mt-2 font-class">
+              Based on all feedback received
+            </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto px-4">
           <div className="bg-gradient-to-br from-blue-900/30 to-purple-900/30 p-6 rounded-2xl border border-blue-500/30 backdrop-blur-sm">
-            <div className="text-2xl font-bold text-blue-400 mb-2">Excellent</div>
-            <div className="text-gray-300">Thank you for the amazing feedback!</div>
+            <div className="text-2xl font-bold text-blue-400 mb-2">
+              Excellent
+            </div>
+            <div className="text-gray-300">
+              Thank you for the amazing feedback!
+            </div>
           </div>
           <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/30 p-6 rounded-2xl border border-green-500/30 backdrop-blur-sm">
-            <div className="text-2xl font-bold text-green-400 mb-2">Appreciated</div>
+            <div className="text-2xl font-bold text-green-400 mb-2">
+              Appreciated
+            </div>
             <div className="text-gray-300">Your input helps us improve</div>
           </div>
           <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 p-6 rounded-2xl border border-purple-500/30 backdrop-blur-sm">
-            <div className="text-2xl font-bold text-purple-400 mb-2">Community</div>
-            <div className="text-gray-300">Building together, growing together</div>
+            <div className="text-2xl font-bold text-purple-400 mb-2">
+              Community
+            </div>
+            <div className="text-gray-300">
+              Building together, growing together
+            </div>
           </div>
         </div>
       </div>
@@ -193,20 +212,19 @@ function Hero() {
   );
 }
 
-
 function Loader() {
   return (
     <div className="bg-black fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
       <Hyperspeed
         effectOptions={{
-          onSpeedUp: () => { },
-          onSlowDown: () => { },
+          onSpeedUp: () => {},
+          onSlowDown: () => {},
           distortion: "turbulentDistortion",
           length: 600,
-          roadWidth: 10,
-          islandWidth: 2,
-          lanesPerRoad: 4,
-          fov: 90,
+          roadWidth: 4, // Reduced to fit a narrow screen
+          islandWidth: 1.5, // Reduced for a narrower road
+          lanesPerRoad: 2, // Reduced for a cleaner look on a narrow road
+          fov: 85, // Slightly reduced for a better perspective
           fovSpeedUp: 150,
           speedUp: 2,
           carLightsFade: 0.4,
@@ -215,13 +233,13 @@ function Loader() {
           shoulderLinesWidthPercentage: 0.05,
           brokenLinesWidthPercentage: 0.1,
           brokenLinesLengthPercentage: 0.5,
-          lightStickWidth: [0.12, 0.5],
-          lightStickHeight: [1.3, 1.7],
+          lightStickWidth: [0.05, 0.2], // Scaled down to match the new dimensions
+          lightStickHeight: [0.8, 1.2], // Scaled down
           movingAwaySpeed: [60, 80],
           movingCloserSpeed: [-120, -160],
           carLightsLength: [400 * 0.03, 400 * 0.2],
           carLightsRadius: [0.05, 0.14],
-          carWidthPercentage: [0.3, 0.5],
+          carWidthPercentage: [0.2, 0.4], // Scaled down to match the new dimensions
           carShiftX: [-0.8, 0.8],
           carFloorSeparation: [0, 5],
           colors: {
@@ -251,21 +269,28 @@ function Loader() {
 
 function App() {
   const items = [
-    "How clear was the explanation of the Coding domain?",
-    "Did the Web Development session give you a good understanding of its scope?",
+    "How would you rate your overall satisfaction with the session?",
+    "How excited are you to attend our upcoming sessions?",
   ];
 
-  let userId = getCookie('user_rating_id');
-  let userName = getCookie('user_name');
+  let userId = getCookie("user_rating_id");
+  let userName = getCookie("user_name");
   const [nameLoaded, setNameLoaded] = useState(!!userName);
+  const [showLoader, setShowLoader] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowLoader(false), 4000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     async function fetchNameAndSetCookie() {
       if (!userName) {
-        const res = await fetch('https://randomuser.me/api/');
+        const res = await fetch("https://randomuser.me/api/");
         const data = await res.json();
-        const name = data.results[0].name.first + ' ' + data.results[0].name.last;
-        setCookie('user_name', name, 365 * 2);
+        const name =
+          data.results[0].name.first + " " + data.results[0].name.last;
+        setCookie("user_name", name, 365 * 2);
         userName = name;
         setNameLoaded(true);
       }
@@ -275,7 +300,7 @@ function App() {
 
   if (!userId) {
     userId = generateUUID();
-    setCookie('user_rating_id', userId, 365 * 2);
+    setCookie("user_rating_id", userId, 365 * 2);
   }
 
   const [hasRated, setHasRated] = useState(false);
@@ -287,17 +312,16 @@ function App() {
   useEffect(() => {
     const checkAlreadyRated = async () => {
       try {
-        const res = await fetch(`http://localhost:4000/check-rated?user_rating_id=${userId}`);
+        const res = await fetch(`/api/check-rated?user_rating_id=${userId}`);
         const data = await res.json();
         console.log("check-rated response:", data);
-
 
         if (data.hasRated) {
           setHasRated(true);
           setSubmitMessage("You have already rated.");
 
           if (Array.isArray(data.que)) {
-            setRatings(data.que); 
+            setRatings(data.que);
           }
 
           if (typeof data.ratings === "number") {
@@ -312,9 +336,8 @@ function App() {
     checkAlreadyRated();
   }, [userId]);
 
-
   const handleRatingChange = (index, value) => {
-    setRatings(prev => {
+    setRatings((prev) => {
       const updated = [...prev];
       updated[index] = value;
       return updated;
@@ -332,21 +355,19 @@ function App() {
     />
   ));
 
-
-
   const handleSubmit = async () => {
     if (!nameLoaded) return;
     const payload = {
       name: userName,
       ratings: ratings,
       average: ratings.reduce((a, b) => a + b, 0) / ratings.length,
-      user_rating_id: userId
+      user_rating_id: userId,
     };
     try {
-      const res = await fetch("http://localhost:4000/", {
+      const res = await fetch("/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (res.status === 403) {
@@ -355,7 +376,7 @@ function App() {
         if (data.SDCREVIEWVARIABLE !== undefined) {
           setOverallAverage(data.SDCREVIEWVARIABLE);
         } else {
-          const avgRes = await fetch("http://localhost:4000/overall-average");
+          const avgRes = await fetch("/api/overall-average");
           const avgData = await avgRes.json();
           setOverallAverage(avgData.overallAverage);
         }
@@ -370,7 +391,7 @@ function App() {
       }
       setTimeout(() => {
         if (overallAverageRef.current) {
-          overallAverageRef.current.scrollIntoView({ behavior: 'smooth' });
+          overallAverageRef.current.scrollIntoView({ behavior: "smooth" });
         }
       }, 1000);
     } catch (err) {
@@ -378,30 +399,38 @@ function App() {
     }
   };
 
-  const allRated = ratings.every(rating => rating > 0);
+  const allRated = ratings.every((rating) => rating > 0);
 
   return (
     <>
-      <Loader />
+      {/* {showLoader && <Loader />} */}
       <Hero />
 
       <div className="bg-black">
         <div className="text-center pt-16 pb-8">
           <div className="relative inline-block">
             <div className="absolute -inset-2 rounded-lg blur opacity-20"></div>
-            <h1 className="relative text-white text-xl sm:text-5xl md:text-5xl font-bold bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent font-class px-8 py-4">
+            <h1 className="relative text-white text-xl sm:text-5xl md:text-5xl font-bold bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text font-class px-8 py-4">
               <ScrollFloat
                 animationDuration={1}
-                ease='back.inOut(2)'
-                scrollStart='center bottom+=50%'
-                scrollEnd='bottom bottom-=40%'
+                ease="back.inOut(2)"
+                scrollStart="center bottom+=50%"
+                scrollEnd="bottom bottom-=40%"
                 stagger={0.03}
               >
                 Feedback Form
               </ScrollFloat>
             </h1>
           </div>
-          <p className="text-gray-400 text-lg mt-4 font-class">Your opinion matters to us</p>
+          {/* 👇 Display user's name */}
+          {userName && (
+            <p className="text-blue-400 text-lg mt-2 font-class">
+              Welcome, <span className="font-semibold">{userName}</span> ✨
+            </p>
+          )}
+          <p className="text-gray-400 text-lg mt-4 font-class">
+            Your opinion matters to us
+          </p>
         </div>
 
         <div className="min-h-screen pt-8 pb-20">
@@ -413,44 +442,63 @@ function App() {
             )}
 
             <div className="w-full">
-              <AnimatedList showGradients={false} displayScrollbar={false} items={items2} />
+              <AnimatedList
+                showGradients={false}
+                displayScrollbar={false}
+                items={items2}
+              />
             </div>
 
             <div className="flex flex-col items-center space-y-4">
               <Button
                 variant="ghost"
                 className={`
-                  px-12 py-4 text-lg font-semibold transition-all duration-300 rounded-2xl border-2
-                  ${hasRated || !nameLoaded
-                    ? "bg-gray-700/50 border-gray-600/50 text-gray-400 cursor-not-allowed"
-                    : allRated
-                      ? "bg-gradient-to-r from-green-600 to-emerald-600 border-green-500/50 text-white hover:from-green-500 hover:to-emerald-500 hover:border-green-400/70 hover:shadow-lg hover:shadow-green-500/25 hover:scale-105"
-                      : "bg-gradient-to-r from-purple-600 to-pink-600 border-purple-500/50 text-white hover:from-purple-500 hover:to-pink-500 hover:border-purple-400/70 hover:shadow-lg hover:shadow-purple-500/25 hover:scale-105"
-                  }
-                `}
+    px-16 py-5 text-xl font-semibold transition-all duration-300 rounded-2xl border-2
+    ${
+      hasRated || !nameLoaded
+        ? "bg-gray-700/50 border-gray-600/50 text-gray-400 cursor-not-allowed"
+        : allRated
+        ? "bg-gradient-to-r from-blue-600 to-sky-600 border-blue-500/50 text-white hover:from-blue-500 hover:to-sky-500 hover:border-blue-400/70 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105"
+        : "bg-gradient-to-r from-blue-600 to-sky-600 border-blue-500/50 text-white hover:from-blue-500 hover:to-sky-500 hover:border-blue-400/70 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105"
+    }
+  `}
                 onClick={handleSubmit}
                 disabled={hasRated || !nameLoaded}
               >
-                {hasRated ? "Already Submitted" : allRated ? "Submit Feedback ✨" : "Submit Feedback"}
+                {hasRated
+                  ? "Already Submitted"
+                  : allRated
+                  ? "Submit Feedback ✨"
+                  : "Submit Feedback"}
               </Button>
 
               {!allRated && !hasRated && (
-                <p className="text-gray-500 text-sm font-class">Please rate all questions before submitting</p>
+                <p className="text-gray-500 text-sm font-class">
+                  Please rate all questions before submitting
+                </p>
               )}
             </div>
 
             {submitMessage && (
               <div className="text-center mt-8">
-                <div className={`
+                <div
+                  className={`
                   inline-flex items-center px-6 py-3 rounded-2xl font-semibold text-lg
-                  ${submitMessage.includes("Error")
-                    ? "bg-gradient-to-r from-red-900/80 to-red-800/40 border border-red-500/50 text-red-200"
-                    : "bg-gradient-to-r from-green-900/80 to-emerald-800/40 border border-green-500/50 text-green-200"
+                  ${
+                    submitMessage.includes("Error")
+                      ? "bg-gradient-to-r from-red-900/80 to-red-800/40 border border-red-500/50 text-red-200"
+                      : "bg-gradient-to-r from-green-900/80 to-emerald-800/40 border border-green-500/50 text-green-200"
                   }
                   backdrop-blur-sm shadow-xl
-                `}>
-                  <div className={`w-3 h-3 rounded-full mr-3 ${submitMessage.includes("Error") ? "bg-red-400" : "bg-green-400"
-                    } animate-pulse`}></div>
+                `}
+                >
+                  <div
+                    className={`w-3 h-3 rounded-full mr-3 ${
+                      submitMessage.includes("Error")
+                        ? "bg-red-400"
+                        : "bg-green-400"
+                    } animate-pulse`}
+                  ></div>
                   {submitMessage}
                 </div>
               </div>

@@ -4,32 +4,26 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const Review = require("./model/Review");
 const { postReview } = require("./controller/postReview");
+const path = require('path');
 const app = express();
 
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 app.use(cors());
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
-const MONGODB_URL = process.env.MONGODB_URL;
-
-mongoose
-  .connect(MONGODB_URL)
-  .then(() => {
-    console.log("Connected to MongoDB successfully");
-  })
-  .catch((error) => {
-    console.error("Error connecting to MongoDB:", error.message);
-  });
-
 app.use(express.json());
 
-app.post("/", postReview);
+// Serve frontend static files only in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+  });
+}
 
-app.get("/overall-average", async (req, res) => {
+// API routes under /api
+const apiRouter = express.Router();
+apiRouter.post('/submit', postReview);
+apiRouter.get('/overall-average', async (req, res) => {
   try {
     let result = await Review.aggregate([
       { $group: { _id: null, average: { $avg: "$average" } } },
@@ -37,25 +31,33 @@ app.get("/overall-average", async (req, res) => {
     const overallAverage = result.length > 0 ? result[0].average : 0;
     res.json({ overallAverage });
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch overall average." });
+    res.status(500).json({ error: 'Failed to fetch overall average.' });
   }
 });
-
-app.get("/check-rated", async (req, res) => {
+apiRouter.get('/check-rated', async (req, res) => {
   const user_rating_id = req.query.user_rating_id;
   if (!user_rating_id) {
-    return res.status(400).json({ hasRated: false });
-  }
-  const doc = await Review.findOne({ user_rating_id: user_rating_id });
-
-  if (!doc) {
     return res.status(400).json({ hasRated: false });
   }
 
   try {
     const review = await Review.findOne({ user_rating_id });
-    res.json({ hasRated: !!review, ratings: doc.average, que: doc.ratings });
+    res.json({ hasRated: !!review  , ratings: review.average , que: review.ratings});
   } catch (err) {
     res.status(500).json({ hasRated: false });
   }
 });
+app.use('/api', apiRouter);
+
+const MONGODB_URL = process.env.MONGODB_URL;
+
+mongoose.connect(MONGODB_URL)
+  .then(() => {
+    console.log('Connected to MongoDB successfully');
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB:', error.message);
+  });
