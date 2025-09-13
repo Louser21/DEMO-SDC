@@ -312,7 +312,7 @@ function App() {
   useEffect(() => {
     const checkAlreadyRated = async () => {
       try {
-        const res = await fetch(`/api/check-rated?user_rating_id=${userId}`);
+        const res = await fetch(`https://demo-sdc-backend.vercel.app/api/check-rated?user_rating_id=${userId}`);
         const data = await res.json();
         console.log("check-rated response:", data);
 
@@ -364,7 +364,7 @@ function App() {
       user_rating_id: userId,
     };
     try {
-      const res = await fetch("/api/submit", {
+      const res = await fetch("https://demo-sdc-backend.vercel.app/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
